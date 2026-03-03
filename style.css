@@ -35,7 +35,9 @@ body {
 
 /* ── Typography & Gradients ────────────────── */
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-weight: 800;
     letter-spacing: -0.02em;
 }
@@ -43,6 +45,7 @@ h1, h2, h3 {
 .text-gradient {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -121,7 +124,9 @@ nav.scrolled {
 /* ── Hero Section ──────────────────────────── */
 
 .hero {
-    height: 100vh;
+    min-height: 100vh;
+    padding-top: 80px;
+    /* To account for fixed navbar */
     display: flex;
     align-items: center;
     position: relative;
@@ -133,7 +138,7 @@ nav.scrolled {
     position: absolute;
     inset: 0;
     background: radial-gradient(circle at 70% 30%, rgba(0, 229, 255, 0.05), transparent),
-                linear-gradient(to right, var(--bg-darker) 30%, rgba(10, 11, 16, 0.4));
+        linear-gradient(to right, var(--bg-darker) 30%, rgba(10, 11, 16, 0.4));
     z-index: 1;
 }
 
@@ -158,7 +163,7 @@ nav.scrolled {
 }
 
 .hero h1 {
-    font-size: 4.5rem;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
     line-height: 1.1;
     margin-bottom: 24px;
 }
@@ -313,7 +318,9 @@ footer {
     .hero h1 {
         font-size: 3rem;
     }
+
     .nav-links {
-        display: none; /* Mobile menu needed but simple for now */
+        display: none;
+        /* Mobile menu needed but simple for now */
     }
 }
