@@ -209,6 +209,10 @@ nav.scrolled {
     width: 100%;
 }
 
+.nav-links a.btn {
+    color: #fff;
+}
+
 /* ── Hero Section ────────────────────────── */
 
 .hero {

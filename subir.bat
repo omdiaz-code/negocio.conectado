@@ -1,37 +1,58 @@
 @echo off
-setlocal
+cd /d "%~dp0"
+chcp 65001 >nul
+setlocal enabledelayedexpansion
+
 echo ========================================
-echo   NEGOCIO CONECTADO - SUBIDA A GITHUB
+echo   NEGOCIO CONECTADO - GITHUB DEPLOY
 echo ========================================
 
-set /p msg="Ingresa mensaje de cambio (o Enter): "
-if "%msg%"=="" set msg="Actualizacion: %date% %time%"
-
-echo.
-echo [+] Agregando cambios...
-git add .
-
-echo.
-echo [+] Guardando cambios (commit)...
-git commit -m "%msg%"
-
-echo.
-echo [+] Enviando a GitHub...
-git push origin main
+:: --- Detection ---
+where git >nul 2>nul
 if %errorlevel% neq 0 (
-    echo.
-    echo [!] ERROR: No se pudo subir a 'main'. Intentando con 'master'...
-    git push origin master
+    if exist "C:\Program Files\Git\cmd\git.exe" (
+        set "GIT_EXE=C:\Program Files\Git\cmd\git.exe"
+    ) else if exist "C:\Program Files (x86)\Git\cmd\git.exe" (
+        set "GIT_EXE=C:\Program Files (x86)\Git\cmd\git.exe"
+    ) else (
+        echo [!] ERROR: No se encontró 'git.exe'.
+        echo Por favor usa Git CMD o instala Git.
+        pause
+        exit /b 1
+    )
+) else (
+    set "GIT_EXE=git"
+)
+
+:: --- Script ---
+set /p msg="📝 Mensaje del commit (Enter para default): "
+if "!msg!"=="" set msg="Actualización: %date% %time%"
+
+echo.
+echo [+] Agregando archivos...
+"%GIT_EXE%" add .
+
+echo.
+echo [+] Creando commit...
+"%GIT_EXE%" commit -m "!msg!"
+
+echo.
+echo [+] Subiendo a GitHub...
+"%GIT_EXE%" push origin main
+if %errorlevel% neq 0 (
+    echo [!] Reintentando con rama 'master'...
+    "%GIT_EXE%" push origin master
 )
 
 echo.
 if %errorlevel% equ 0 (
     echo ========================================
-    echo   ¡EXITO! Cambios en la nube.
+    echo   🚀 ¡EXITO! Cambios publicados.
     echo ========================================
 ) else (
     echo ========================================
-    echo   [!] ALGO SALIO MAL. Revisa tu internet o Git.
+    echo   ❌ ERROR en la subida.
     echo ========================================
 )
+
 pause
